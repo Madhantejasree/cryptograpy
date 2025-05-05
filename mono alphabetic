@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void encrypt(char *plaintext, char *key, char *ciphertext) {
+    for (int i = 0; plaintext[i] != '\0'; i++) {
+        if (isupper(plaintext[i])) {
+            ciphertext[i] = key[plaintext[i] - 'A'];
+        } else {
+            ciphertext[i] = plaintext[i]; 
+        }
+    }
+    ciphertext[strlen(plaintext)] = '\0';
+}
+
+void decrypt(char *ciphertext, char *key, char *plaintext) {
+    char reverseKey[26];
+
+  
+    for (int i = 0; i < 26; i++) {
+        reverseKey[key[i] - 'A'] = 'A' + i;
+    }
+
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        if (isupper(ciphertext[i])) {
+            plaintext[i] = reverseKey[ciphertext[i] - 'A'];
+        } else {
+            plaintext[i] = ciphertext[i];
+        }
+    }
+    plaintext[strlen(ciphertext)] = '\0';
+}
+
+int main() {
+    char key[27] = "QWERTYUIOPASDFGHJKLZXCVBNM"; // example key (must be 26 letters)
+    char message[100], encrypted[100], decrypted[100];
+
+    printf("Enter UPPERCASE message (A-Z only): ");
+    fgets(message, sizeof(message), stdin);
+    message[strcspn(message, "\n")] = '\0'; // remove newline
+
+    encrypt(message, key, encrypted);
+    printf("Encrypted: %s\n", encrypted);
+
+    decrypt(encrypted, key, decrypted);
+    printf("Decrypted: %s\n", decrypted);
+
+    return 0;
+}
