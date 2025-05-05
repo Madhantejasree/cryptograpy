@@ -16,7 +16,7 @@ void encrypt(char *message, int key) {
 
 
 void decrypt(char *message, int key) {
-    encrypt(message, 26 - (key % 26));  // Inverse shift
+    encrypt(message, 26 - (key % 26)); 
 }
 
 int main() {
