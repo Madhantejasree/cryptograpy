@@ -2,12 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-// Function to get the determinant of the 2x2 matrix
+
 int getDeterminant(int key[2][2]) {
     return (key[0][0]*key[1][1] - key[0][1]*key[1][0]) % 26;
 }
 
-// Function to find modular inverse of a number mod 26
 int modInverse(int a, int m) {
     a = a % m;
     for (int x = 1; x < m; x++)
@@ -16,7 +15,7 @@ int modInverse(int a, int m) {
     return -1;
 }
 
-// Function to find inverse key matrix
+
 void getInverseKey(int key[2][2], int invKey[2][2]) {
     int det = getDeterminant(key);
     det = (det + 26) % 26;
@@ -27,13 +26,12 @@ void getInverseKey(int key[2][2], int invKey[2][2]) {
     invKey[1][0] = -key[1][0] * invDet % 26;
     invKey[1][1] =  key[0][0] * invDet % 26;
 
-    // Adjust for negative values
+  
     for (int i = 0; i < 2; i++)
         for (int j = 0; j < 2; j++)
             invKey[i][j] = (invKey[i][j] + 26) % 26;
 }
 
-// Function to encrypt 2 letters
 void encryptPair(int key[2][2], char in[2], char out[2]) {
     int a = in[0] - 'A';
     int b = in[1] - 'A';
@@ -42,7 +40,7 @@ void encryptPair(int key[2][2], char in[2], char out[2]) {
     out[1] = (key[1][0]*a + key[1][1]*b) % 26 + 'A';
 }
 
-// Function to decrypt 2 letters
+
 void decryptPair(int invKey[2][2], char in[2], char out[2]) {
     int a = in[0] - 'A';
     int b = in[1] - 'A';
@@ -73,7 +71,7 @@ int main() {
 
     len = strlen(text);
     if (len % 2 != 0) {
-        text[len++] = 'X'; // Padding if length is odd
+        text[len++] = 'X'; 
         text[len] = '\0';
     }
 
@@ -89,7 +87,7 @@ int main() {
     printf("\nDecrypted Text: ");
     for (int i = 0; i < len; i += 2) {
         char out[2];
-        encryptPair(key, &text[i], out);  // re-encrypt
+        encryptPair(key, &text[i], out);  
         decryptPair(invKey, out, out);
         printf("%c%c", out[0], out[1]);
     }
