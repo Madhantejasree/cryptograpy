@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void generateKey(char* text, char* keyword, char* newKey) {
+    int textLen = strlen(text);
+    int keyLen = strlen(keyword);
+    for (int i = 0, j = 0; i < textLen; i++) {
+        if (isalpha(text[i])) {
+            newKey[i] = toupper(keyword[j % keyLen]);
+            j++;
+        } else {
+            newKey[i] = text[i]; // keep spaces/punctuations in sync
+        }
+    }
+    newKey[textLen] = '\0';
+}
+
+
+void encrypt(char* plaintext, char* key, char* ciphertext) {
+    for (int i = 0; plaintext[i] != '\0'; i++) {
+        char ch = plaintext[i];
+        if (isalpha(ch)) {
+            char base = isupper(ch) ? 'A' : 'a';
+            int shift = toupper(key[i]) - 'A';
+            ciphertext[i] = (ch - base + shift) % 26 + base;
+        } else {
+            ciphertext[i] = ch;
+        }
+    }
+    ciphertext[strlen(plaintext)] = '\0';
+}
+
+
+void decrypt(char* ciphertext, char* key, char* plaintext) {
+    for (int i = 0; ciphertext[i] != '\0'; i++) {
+        char ch = ciphertext[i];
+        if (isalpha(ch)) {
+            char base = isupper(ch) ? 'A' : 'a';
+            int shift = toupper(key[i]) - 'A';
+            plaintext[i] = (ch - base - shift + 26) % 26 + base;
+        } else {
+            plaintext[i] = ch;
+        }
+    }
+    plaintext[strlen(ciphertext)] = '\0';
+}
+
+int main() {
+    char plaintext[100], keyword[100], key[100], ciphertext[100], decrypted[100];
+
+   
+    printf("Enter message to encrypt: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+    plaintext[strcspn(plaintext, "\n")] = '\0';
+
+    
+    printf("Enter keyword: ");
+    fgets(keyword, sizeof(keyword), stdin);
+    keyword[strcspn(keyword, "\n")] = '\0';
+
+    generateKey(plaintext, keyword, key);
+
+   
+    encrypt(plaintext, key, ciphertext);
+    printf("Encrypted: %s\n", ciphertext);
+
+    decrypt(ciphertext, key, decrypted);
+    printf("Decrypted: %s\n", decrypted);
+
+    return 0;
+}
